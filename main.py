@@ -51,7 +51,7 @@ daily_data = {
     ).tz_convert(response.Timezone().decode())
 }
 daily_data["ET0 (FAO) mm/m² "] = daily_et0_fao_evapotranspiration
-daily_data["Precipitation mm/m² "] = daily_rain_sum
+daily_data["Precipitation mm/m² "] = daily_precipitation
 daily_dataframe = pd.DataFrame(data=daily_data)
 st.dataframe(daily_dataframe)
 st.badge("Data provided by https://open-meteo.com - © 2022–2026 Open-Meteo (CC BY 4.0)")
