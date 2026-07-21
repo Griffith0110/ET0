@@ -39,8 +39,8 @@ st.badge(f"Elevation {response.Elevation()} m asl", color="yellow")
 
 # Process hourly data. The order of variables needs to be the same as requested.
 daily = response.Daily()
-daily_precipitation_sum = daily.Variables(0).ValuesAsNumpy()
-daily_et0_fao_evapotranspiration = daily.Variables(1).ValuesAsNumpy()
+daily_et0_fao_evapotranspiration = daily.Variables(0).ValuesAsNumpy()
+daily_precipitation_sum = daily.Variables(1).ValuesAsNumpy()
 
 daily_data = {
     "date": pd.date_range(
