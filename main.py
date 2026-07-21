@@ -27,6 +27,7 @@ params = {
     "models":"italia_meteo_arpae_icon_2i",
     "timezone": "auto",
     "forecast_days": 1,
+    "past_day": 1,
 }
 responses = openmeteo.weather_api(url, params=params)
 
