@@ -8,7 +8,7 @@ import streamlit as st
 if user_input:
     geolocator = geopy.geocoders.Nominatim(user_agent="ET0")
 try:
-    location = geolocator.geocode(st.chat_input("Position"))
+    location = geolocator.geocode(st.text_input("Position"))
 except Exception as e:
     location = None
     st.error(f"Errore durante la ricerca della posizione: {e}")
