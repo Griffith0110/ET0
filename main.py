@@ -1,0 +1,63 @@
+import openmeteo_requests
+import geopy
+import pandas as pd
+import requests_cache
+from retry_requests import retry
+import streamlit as st
+
+# Setup the Open-Meteo API client with cache and retry on error
+cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
+retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
+openmeteo = openmeteo_requests.Client(session=retry_session)
+
+geolocator = geopy.geocoders.Nominatim(user_agent="ET0")
+location = geolocator.geocode(st.chat_input("Position"))
+
+
+# Make sure all required weather variables are listed here
+# The order of variables in hourly or daily is important to assign them correctly below
+url = "https://api.open-meteo.com/v1/forecast"
+params = {
+    f"latitude": {location.latitude},
+    f"longitude": {location.longitude},
+    "hourly": [
+        "et0_fao_evapotranspiration",
+        "precipitation",
+        "precipitation_probability",
+    ],
+    "timezone": "auto",
+    "forecast_days": 1,
+}
+responses = openmeteo.weather_api(url, params=params)
+
+# Process first location. Add a for-loop for multiple locations or weather models
+response = responses[0]
+st.header("Daily Evapotranspiration")
+st.subheader(location.address)
+st.badge(f"{response.Latitude()}°N  {response.Longitude()}°E", color="green")
+st.badge(f"Elevation    {response.Elevation()} m asl", color="yellow")
+
+# Process hourly data. The order of variables needs to be the same as requested.
+hourly = response.Hourly()
+hourly_et0_fao_evapotranspiration = hourly.Variables(0).ValuesAsNumpy()
+hourly_precipitation = hourly.Variables(1).ValuesAsNumpy()
+hourly_precipitation_probability = hourly.Variables(2).ValuesAsNumpy()
+hourly_data = {
+    "date": pd.date_range(
+        start=pd.to_datetime(hourly.Time(), unit="s", utc=True),
+        end=pd.to_datetime(hourly.TimeEnd(), unit="s", utc=True),
+        freq=pd.Timedelta(seconds=hourly.Interval()),
+        inclusive="left",
+    ).tz_convert(response.Timezone().decode())
+}
+hourly_data["ET0 (FAO) mm/m² "] = hourly_et0_fao_evapotranspiration
+hourly_data["Precipitation mm/m² "] = hourly_precipitation
+hourly_data["precipitation probability % "] = hourly_precipitation_probability
+hourly_dataframe = pd.DataFrame(data=hourly_data)
+st.dataframe(hourly_dataframe)
+st.badge(
+    f"ET0 {hourly_et0_fao_evapotranspiration.sum()} mm/m²",
+    color="blue",
+)
+st.badge(f"Precipitation {hourly_precipitation.sum()} mm/m²", color="orange")
+st.badge("Data provided by https://open-meteo.com - © 2022–2026 Open-Meteo (CC BY 4.0)")
