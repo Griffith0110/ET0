@@ -33,10 +33,10 @@ responses = openmeteo.weather_api(url, params=params)
 
 # Process first location. Add a for-loop for multiple locations or weather models
 response = responses[0]
-st.header("Daily Evapotranspiration")
-st.subheader(location.address)
-st.badge(f"{response.Latitude()}°N  {response.Longitude()}°E", color="green")
-st.badge(f"Elevation {response.Elevation()} m asl", color="yellow")
+st.header("Daily ET0")
+st.subheader(f"📍 {location.address}",text_alignment="justify")
+st.badge(f"🧭 {response.Latitude()}°N  {response.Longitude()}°E", color="green")
+st.badge(f"⛰️ {response.Elevation()} m slm", color="yellow")
 
 # Process hourly data. The order of variables needs to be the same as requested.
 daily = response.Daily()
@@ -44,15 +44,15 @@ daily_et0_fao_evapotranspiration = daily.Variables(0).ValuesAsNumpy()
 daily_precipitation_sum = daily.Variables(1).ValuesAsNumpy()
 
 daily_data = {
-    "date": pd.date_range(
+    "📅": pd.date_range(
         start=pd.to_datetime(daily.Time(), unit="s", utc=True),
         end=pd.to_datetime(daily.TimeEnd(), unit="s", utc=True),
         freq=pd.Timedelta(seconds=daily.Interval()),
         inclusive="left",
     ).tz_convert(response.Timezone().decode())
 }
-daily_data["ET0 (FAO) mm/m² "] = daily_et0_fao_evapotranspiration
-daily_data["Precipitation mm/m² "] = daily_precipitation_sum
+daily_data["🌿 ET0 (FAO) mm/m² "] = daily_et0_fao_evapotranspiration
+daily_data["🌧️ mm/m² "] = daily_precipitation_sum
 daily_dataframe = pd.DataFrame(data=daily_data)
-st.dataframe(daily_dataframe)
+st.dataframe(daily_dataframe,hide_index=True)
 st.badge("Data provided by https://open-meteo.com - © 2022–2026 Open-Meteo (CC BY 4.0)")
