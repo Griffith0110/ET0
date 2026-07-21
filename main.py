@@ -21,8 +21,8 @@ params = {
     f"latitude": {location.latitude},
     f"longitude": {location.longitude},
     "hourly": [
-        "et0_fao_evapotranspiration",
         "rain_sum",
+        "et0_fao_evapotranspiration"
     ],
     "models":"italia_meteo_arpae_icon_2i",
     "timezone": "auto",
