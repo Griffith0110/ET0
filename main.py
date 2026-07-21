@@ -25,6 +25,7 @@ params = {
         "precipitation",
     ],
     "models":"italia_meteo_arpae_icon_2i",
+    "timeformat": "iso8601",
     "timezone": "auto",
     "forecast_days": 1,
 }
