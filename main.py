@@ -24,8 +24,8 @@ params = {
         "et0_fao_evapotranspiration",
         "precipitation",
         "precipitation_probability",
-        "models":"italia_meteo_arpae_icon_2i"
     ],
+    "models":"italia_meteo_arpae_icon_2i",
     "timezone": "auto",
     "forecast_days": 1,
 }
