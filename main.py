@@ -23,7 +23,6 @@ params = {
     "hourly": [
         "et0_fao_evapotranspiration",
         "precipitation",
-        "precipitation_probability",
     ],
     "models":"italia_meteo_arpae_icon_2i",
     "timezone": "auto",
@@ -42,7 +41,6 @@ st.badge(f"Elevation    {response.Elevation()} m asl", color="yellow")
 hourly = response.Hourly()
 hourly_et0_fao_evapotranspiration = hourly.Variables(0).ValuesAsNumpy()
 hourly_precipitation = hourly.Variables(1).ValuesAsNumpy()
-hourly_precipitation_probability = hourly.Variables(2).ValuesAsNumpy()
 hourly_data = {
     "date": pd.date_range(
         start=pd.to_datetime(hourly.Time(), unit="s", utc=True),
@@ -53,7 +51,6 @@ hourly_data = {
 }
 hourly_data["ET0 (FAO) mm/m² "] = hourly_et0_fao_evapotranspiration
 hourly_data["Precipitation mm/m² "] = hourly_precipitation
-hourly_data["precipitation probability % "] = hourly_precipitation_probability
 hourly_dataframe = pd.DataFrame(data=hourly_data)
 st.dataframe(hourly_dataframe)
 st.badge(
