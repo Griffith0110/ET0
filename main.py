@@ -5,13 +5,8 @@ import requests_cache
 from retry_requests import retry
 import streamlit as st
 
-if st.text_input("Position"):
     geolocator = geopy.geocoders.Nominatim(user_agent="ET0")
-try:
-    location = geolocator.geocode(st.text_input("Position"))
-except Exception as e:
-    location = None
-    st.error(f"Errore durante la ricerca della posizione: {e}")
+    location = geolocator.geocode(st.chat_input("Position"))
 
 
 # Setup the Open-Meteo API client with cache and retry on error
