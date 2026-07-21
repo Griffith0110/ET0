@@ -33,9 +33,9 @@ responses = openmeteo.weather_api(url, params=params)
 
 # Process first location. Add a for-loop for multiple locations or weather models
 response = responses[0]
-st.header("Daily ET0")
-st.subheader(f"📍 {location.address}",text_alignment="justify")
-st.badge(f"🧭 {response.Latitude()}°N  {response.Longitude()}°E", color="green")
+st.subheader("Daily ET0")
+st.write(f"📍 {location.address}",text_alignment="justify")
+st.badge(f"🧭 {response.Latitude()}°N\t{response.Longitude()}°E", color="green")
 st.badge(f"⛰️ {response.Elevation()} m slm", color="yellow")
 
 # Process hourly data. The order of variables needs to be the same as requested.
