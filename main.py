@@ -25,7 +25,6 @@ params = {
         "precipitation",
     ],
     "models":"italia_meteo_arpae_icon_2i",
-    "timeformat": "iso8601",
     "timezone": "auto",
     "forecast_days": 1,
 }
@@ -36,7 +35,7 @@ response = responses[0]
 st.header("Daily Evapotranspiration")
 st.subheader(location.address)
 st.badge(f"{response.Latitude()}°N  {response.Longitude()}°E", color="green")
-st.badge(f"Elevation    {response.Elevation()} m asl", color="yellow")
+st.badge(f"Elevation {response.Elevation()} m asl", color="yellow")
 
 # Process hourly data. The order of variables needs to be the same as requested.
 hourly = response.Hourly()
