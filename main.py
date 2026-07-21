@@ -11,7 +11,7 @@ retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
 openmeteo = openmeteo_requests.Client(session=retry_session)
 
 geolocator = geopy.geocoders.Nominatim(user_agent="ET0")
-location = geolocator.geocode(st.chat_input("Position"))
+location = geolocator.geocode(st.text_input("Position"),value="Genga")
 
 
 # Make sure all required weather variables are listed here
