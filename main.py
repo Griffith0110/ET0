@@ -5,7 +5,7 @@ import requests_cache
 from retry_requests import retry
 import streamlit as st
 
-if user_input:
+if st.text_input("Position"):
     geolocator = geopy.geocoders.Nominatim(user_agent="ET0")
 try:
     location = geolocator.geocode(st.text_input("Position"))
