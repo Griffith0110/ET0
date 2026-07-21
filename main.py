@@ -22,7 +22,7 @@ params = {
     f"longitude": {location.longitude},
     "hourly": [
         "et0_fao_evapotranspiration",
-        "precipitation",
+        "rain_sum",
     ],
     "models":"italia_meteo_arpae_icon_2i",
     "timezone": "auto",
@@ -39,8 +39,9 @@ st.badge(f"Elevation {response.Elevation()} m asl", color="yellow")
 
 # Process hourly data. The order of variables needs to be the same as requested.
 daily = response.Daily()
-daily_et0_fao_evapotranspiration = daily.Variables(0).ValuesAsNumpy()
-daily_precipitation = daily.Variables(1).ValuesAsNumpy()
+daily_et0_fao_evapotranspiration = daily.Variables(1).ValuesAsNumpy()
+daily_precipitation = daily.Variables(0).ValuesAsNumpy()
+
 daily_data = {
     "date": pd.date_range(
         start=pd.to_datetime(daily.Time(), unit="s", utc=True),
@@ -50,12 +51,7 @@ daily_data = {
     ).tz_convert(response.Timezone().decode())
 }
 daily_data["ET0 (FAO) mm/m² "] = daily_et0_fao_evapotranspiration
-daily_data["Precipitation mm/m² "] = daily_precipitation
+daily_data["Precipitation mm/m² "] = daily_rain_sum
 daily_dataframe = pd.DataFrame(data=daily_data)
 st.dataframe(daily_dataframe)
-st.badge(
-    f"ET0 {daily_et0_fao_evapotranspiration.sum()} mm/m²",
-    color="blue",
-)
-st.badge(f"Precipitation {daily_precipitation.sum()} mm/m²", color="orange")
 st.badge("Data provided by https://open-meteo.com - © 2022–2026 Open-Meteo (CC BY 4.0)")
